@@ -6,6 +6,7 @@ Features include:
 
 - Configurable margins for stop loss or take profit (based on % distance from entry price of position)
 - Suppports XBTUSD and ETHUSD by default; additional markets can be added
+- Toggles to enable/disable stop loss or take profit independently
 
 # Dependencies
 
