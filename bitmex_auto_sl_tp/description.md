@@ -10,4 +10,4 @@ Features include:
 
 # Dependencies
 
-```No external dependencies```
+```requests```
