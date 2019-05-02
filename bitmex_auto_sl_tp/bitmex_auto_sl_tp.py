@@ -30,10 +30,11 @@ def rounded_price(number, symbol):
         return round(number * 20.0) / 20.0
 
 def auth_req_get(endpoint, query):
+    # make authenticated GET requests
     global API_SECRET, API_KEY
     path = BASE_URL + endpoint
-    e_path = '/api/v1/' + endpoint
-    if query != '':
+    e_path = '/api/v1/' + endpoint # path for encrypted message
+    if query != '': # add query to paths
         path = path + "?" + query
         e_path = e_path + "?" + query
     expires = int(round(time.time()) + 10)
@@ -53,11 +54,12 @@ def auth_req_get(endpoint, query):
         time.sleep(1)
 
 def auth_req_post(endpoint, payload):
+    # make authenticated POST requests
     global API_KEY, API_SECRET
     path = BASE_URL + endpoint
-    e_path = '/api/v1/' + endpoint
+    e_path = '/api/v1/' + endpoint # path for encrypted message
     expires = int(round(time.time()) + 10)
-    payload2 = str(payload.replace(' ', ''))
+    payload2 = str(payload.replace(' ', '')) # remove extra spaces
     message = str ('POST' + e_path + str(expires) + payload2)
     signature = hmac.new(bytes(API_SECRET, 'utf8'),\
                 bytes(message,'utf8'), digestmod=hashlib.sha256).\
@@ -71,24 +73,27 @@ def auth_req_post(endpoint, payload):
     resp = requests.post(path, headers=request_headers, data=payload2)
     return resp
 
-def place_order(symbol, side, qty, ref_price, stop=False):
-    #wait until order reflects in dict before returning
-    if side == 'Buy':
+def place_order(symbol, side, qty, ref_price, stop=False)
+    if side == 'Buy': # it means we are SHORT
         if stop == True:
+            # stop loss above entry
             price = ref_price * (1+STOP_LOSS)
         else:
+            # take profit below entry
             price = ref_price * (1-TAKE_PROFIT)
-    elif side == 'Sell':
+    elif side == 'Sell': # it means we are LONG
         if stop == True:
+            # stop loss below entry
             price = ref_price * (1-STOP_LOSS)
         else:
+            # take profit above entry
             price = ref_price * (1+TAKE_PROFIT)
     order_details = {
         'symbol': symbol,
         'side': side,
         'orderQty': qty,
     }
-    if stop == True:
+    if stop == True: # add extra info for stop orders
         order_details['ordType'] = 'Stop'
         order_details['stopPx'] = rounded_price(price, symbol)
     else:
@@ -153,9 +158,9 @@ def cover_positions():
                 has_sl = False
                 for od in orders[sym]:
                     if od['side'] == 'Sell' and od['type'] == 'Stop':
-                        has_sl = True
+                        has_sl = True # found stop loss
                     elif od['side'] == 'Sell':
-                        has_tp = True
+                        has_tp = True # found take profit
                 if has_sl == False:
                     if ENABLE_STOP_LOSS == True:
                         place_order(sym, 'Sell', abs(positions[sym]['qty']),\
@@ -170,9 +175,9 @@ def cover_positions():
                 has_sl = False
                 for od in orders[sym]:
                     if od['side'] == 'Buy' and od['type'] == 'Stop':
-                        has_sl = True
+                        has_sl = True # found stop loss
                     elif od['side'] == 'Buy':
-                        has_tp = True
+                        has_tp = True # found take profit
                 if has_sl == False:
                     if ENABLE_STOP_LOSS == True:
                         place_order(sym, 'Buy', abs(positions[sym]['qty']),\
@@ -184,6 +189,7 @@ def cover_positions():
         time.sleep(1)
 
 if __name__ == '__main__':
+    # start main threads
     Thread(target=maintain_positions).start()
     Thread(target=maintain_orders).start()
     Thread(target=cover_positions).start()
