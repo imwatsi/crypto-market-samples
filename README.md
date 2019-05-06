@@ -6,6 +6,10 @@ A collection of sample Python scripts that one can incorporate or build upon whe
 
 # Current Sample Scripts
 
+## Technical Analysis (bfxhfindicators)
+
+- Stochastic Oscillator (Basic): [ta_stoch](https://github.com/imwatsi/crypto-market-samples/tree/master/ta_stoch)
+
 ## Binance
 
 - Get all Binance USDT pairs and filter by {price vs EMA}: [binance_pairs_ema](https://github.com/imwatsi/crypto-market-samples/tree/master/binance_pairs_ema)
