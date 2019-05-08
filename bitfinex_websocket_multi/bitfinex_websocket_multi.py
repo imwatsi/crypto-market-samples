@@ -82,7 +82,6 @@ def print_details():
             details['last_price'], details['volume']))
         print('%s: currently has (%s) candles, latest candle: %s'\
             %(symbol, len(candles[symbol]), str(candles[symbol][0])))
-        time.sleep(0.2)
 
 def on_message(ws, message):
     global channels, balances, tickers
