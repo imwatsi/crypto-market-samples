@@ -21,6 +21,7 @@ A collection of sample Python scripts that one can incorporate or build upon whe
 ## Bitfinex
 
 - Basic authenticated websocket connection: [bitfinex_websocket_basic](https://github.com/imwatsi/crypto-market-samples/tree/master/bitfinex_websocket_basic)
+- Subscribing to multiple channels via websocket: [bitfinex_websocket_multi](https://github.com/imwatsi/crypto-market-samples/tree/master/bitfinex_websocket_multi)
 
 ---
 
