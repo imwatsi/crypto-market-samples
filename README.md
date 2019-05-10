@@ -9,6 +9,7 @@ A collection of sample Python scripts that one can incorporate or build upon whe
 ## Technical Analysis (bfxhfindicators)
 
 - Stochastic Oscillator (Basic): [ta_stoch](https://github.com/imwatsi/crypto-market-samples/tree/master/ta_stoch)
+- Detect EMA crosses: [ta_ema_cross](https://github.com/imwatsi/crypto-market-samples/tree/master/ta_ema_cross)
 
 ---
 
