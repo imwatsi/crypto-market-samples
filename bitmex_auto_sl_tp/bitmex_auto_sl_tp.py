@@ -51,6 +51,8 @@ def auth_req_get(endpoint, query):
         resp = requests.get(path, headers=request_headers)
         if resp.status_code == 200:
             return json.loads(resp.content)
+        else:
+            print(resp.content)
         time.sleep(1)
 
 def auth_req_post(endpoint, payload):
@@ -73,7 +75,7 @@ def auth_req_post(endpoint, payload):
     resp = requests.post(path, headers=request_headers, data=payload2)
     return resp
 
-def place_order(symbol, side, qty, ref_price, stop=False)
+def place_order(symbol, side, qty, ref_price, stop=False):
     if side == 'Buy': # it means we are SHORT
         if stop == True:
             # stop loss above entry
