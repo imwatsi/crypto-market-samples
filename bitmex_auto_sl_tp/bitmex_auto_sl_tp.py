@@ -4,6 +4,7 @@ import hashlib
 import json
 import time
 import urllib
+import os
 from threading import Thread
 
 BASE_URL = 'https://www.bitmex.com/api/v1/'
@@ -32,6 +33,7 @@ def rounded_price(number, symbol):
 def auth_req_get(endpoint, query):
     # make authenticated GET requests
     global API_SECRET, API_KEY
+    bln_pass = False
     path = BASE_URL + endpoint
     e_path = '/api/v1/' + endpoint # path for encrypted message
     if query != '': # add query to paths
@@ -52,12 +54,22 @@ def auth_req_get(endpoint, query):
         if resp.status_code == 200:
             return json.loads(resp.content)
         else:
+            print(resp.status_code)
             print(resp.content)
+            data = json.loads(resp.content)
+            # ignore expires message from BitMEX (another fix can be implemented), otherwise stop bot
+            if "error" in data:
+                if "message" in data["error"]:
+                    if "expired" in data["error"]["message"]:
+                        bln_pass = True
+            if bln_pass == False:
+                os._exit(1)
         time.sleep(1)
 
 def auth_req_post(endpoint, payload):
     # make authenticated POST requests
     global API_KEY, API_SECRET
+    bln_pass = False
     path = BASE_URL + endpoint
     e_path = '/api/v1/' + endpoint # path for encrypted message
     expires = int(round(time.time()) + 10)
@@ -73,7 +85,19 @@ def auth_req_post(endpoint, payload):
             'api-signature' : signature,
     }
     resp = requests.post(path, headers=request_headers, data=payload2)
-    return resp
+    if resp.status_code == 200:
+        return resp
+    else:
+        print(resp.status_code)
+        print(resp.content)
+        data = json.loads(resp.content)
+        # ignore expires message from BitMEX (another fix can be implemented), otherwise stop bot
+        if "error" in data:
+            if "message" in data["error"]:
+                if "expired" in data["error"]["message"]:
+                    bln_pass = True
+        if bln_pass == False:
+            os._exit(1)
 
 def place_order(symbol, side, qty, ref_price, stop=False):
     if side == 'Buy': # it means we are SHORT
